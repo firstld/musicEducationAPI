@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans default-lazy-init="false"
+    xmlns="http://www.springframework.org/schema/beans" 
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="  
+       http://www.springframework.org/schema/beans   
+       http://www.springframework.org/schema/beans/spring-beans.xsd     
+       http://www.springframework.org/schema/tx   
+       http://www.springframework.org/schema/tx/spring-tx.xsd   
+       http://www.springframework.org/schema/context  
+       http://www.springframework.org/schema/context/spring-context.xsd">  
+       <!-- 自动扫描  -->
+       <context:component-scan base-package="com.jingcheng.musicEducation" />
+       <context:annotation-config/>
+     
+	  <!-- 配置mybatisSqlSessionFactoryBean -->
+	    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	        <property name="dataSource" ref="dataSource" />
+	        <property name="configLocation" value="classpath:conf/mybatis-config.xml"></property>
+	        <property name="mapperLocations" value="classpath:com/jingcheng/musicEducation/*/dao/*.xml" /> 
+	    </bean>
+	    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+	        <property name="basePackage" value="com.jingcheng.**.dao" />
+	        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
+	    </bean>
+	    <!-- 配置SqlSessionTemplate -->
+	    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate" scope="prototype">
+	        <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+	    </bean>
+	    <!-- 事务配置 -->
+	    <bean id="transactionManager"
+	          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	        <property name="dataSource" ref="dataSource" />
+	    </bean>
+	    <!-- 使用annotation注解方式配置事务 -->
+	    <tx:annotation-driven transaction-manager="transactionManager" />
+	    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+	        <property name="dataSource">
+	            <ref bean="dataSource" />
+	        </property>
+	    </bean> 
+	    <tx:annotation-driven transaction-manager="jdbcTemplate" />
+       
+       
+       <!-- 引入数据库配置文件 -->
+       <!--
+           <context-util:properties id="db" 
+	      location="classpath:db.properties"/> 
+	      -->
+	      <bean id="propertyConfigurer"
+			class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+			<property name="location" value="classpath:db.properties" />
+	  </bean>
+	   <!--创建连接 -->
+	   <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+			destroy-method="close">
+			<property name="driverClassName" value="${driver}" />
+			<property name="url" value="${url}" />
+			<property name="username" value="${username}" />
+			<property name="password" value="${password}" />
+			<!-- 初始化连接大小 -->
+			<property name="initialSize" value="${initialSize}"></property>
+			<!-- 连接池最大数量 -->
+			<property name="maxActive" value="${maxActive}"></property>
+			<!-- 获取连接最大等待时间 -->
+			<property name="maxWait" value="${maxWait}"></property>
+     </bean>
+      <!-- 配置文件上传的视图解析器 -->
+     <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 默认编码 -->
+        <property name="defaultEncoding" value="utf-8" />
+        <!-- 文件大小最大值 -->
+        <property name="maxUploadSize" value="10485760000" />
+        <!-- 内存中的最大值 -->
+        <property name="maxInMemorySize" value="40960" />
+     </bean>
+     
+      
+      <!-- <import resource="classpath:conf/quartz.xml"/> -->
+    
+     
+</beans>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <!--
+      动漫模块的mapper
+    -->
+    <mapper namespace="com.jingcheng.musicEducation.user.dao.UserDao">
+    
+    <!-- 获取某位用户的信息 -->
+    <select id="findObjById" resultType="com.jingcheng.musicEducation.user.entity.User">
+       select *
+       from user 
+       where id=#{id}    
+    </select>    
+    <!-- 获取用户列表 -->
+    <select id="findObjList" parameterType="map" resultType="com.jingcheng.musicEducation.user.entity.User">
+      select *
+      from user
+      <where>
+        <if test="telephone!=null and telephone!=''">
+          telephone=#{telephone}
+        </if>
+        <if test="status!=null ">
+          and status=#{status}
+        </if>
+        <if test="gender!=null">
+          and gender=#{gender}
+        </if>
+        <if test="beginTime!=null">
+            <![CDATA[   and DATE_FORMAT(createdAt, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')]]>
+        </if>
+		<if test="endTime!=null">
+		    <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
+		</if>
+      </where> 
+    </select>
+    
+    <!-- 统计日注册量  -->
+     <select id="countDayRegisterUser" parameterType="String" resultType="Map">
+     select DATE_FORMAT(createdAt,'%Y-%m-%d') createdAt , count(*) count
+     from user
+     <where>
+        <if test="beginTime!=null and beginTime!=''">
+            <![CDATA[   and DATE_FORMAT(createdAt, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
+        </if>
+     </where>
+     group by DATE_FORMAT(created,'%Y-%m-%d')
+     </select>
+   
+    <!-- 统计月注册量 -->
+    <select id="countMonthRegisterUser" parameterType="String" resultType="Map">
+    select DATE_FORM(createdAt,'%Y-%m') ,count(*) 
+    from user
+     <where>
+        <if test="beginTime!=null and beginTime!=''">
+            <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
+        </if>
+     </where>
+    group by DATE_FROM(createdAt,'%Y-%m')
+    </select> 
+    
+    
+    
+    
+    </mapper>

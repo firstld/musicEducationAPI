@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <!--
+      分类模块的mapper
+    -->
+    <mapper namespace="com.jingcheng.musicEducation.category.dao.CategoryDao">
+   
+    <insert id="insertEntity" parameterType="com.jingcheng.musicEducation.category.entity.Category">
+      insert into category( name,
+                            description,
+                            categorySn,
+                            parentSn,
+                            status,
+                            createdAt,
+                            updatedAt
+                          )
+                    values(#{name},
+                           #{description},
+                           #{categorySn},
+                           #{parentSn},
+                           #{status},         
+                           NOW(),
+                           NOW()                                
+                         )
+    
+    </insert>
+    
+     <update id="updateEntity" parameterType="com.jingcheng.musicEducation.category.entity.Category">
+         update category
+		        set name       =#{name},
+		            description=#{description},
+		            categorySn =#{categorySn},
+		            parentSn   =#{parentSn},
+		            status     =#{status},
+		            updatedAt  =NOW()
+		      where id         =#{id}
+              
+             
+          
+    </update> 
+    
+    <select id="findObjById" resultType="com.jingcheng.musicEducation.category.entity.Category">
+       select * from category where id=#{id}    
+    </select>
+    <select id="findObjList" parameterType="map" resultType="com.jingcheng.musicEducation.category.entity.Category">
+      select *
+      from category
+      <where>
+        <if test="name!=null and name!=''">
+          name like concat("%",#{name},"%")
+        </if>
+        <if test="categorySn!=null">
+          and categorySn=#{categorySn}
+        </if>
+        <if test="parentSn!=null">
+          and parentSn=#{parentSn}
+        </if>
+        <if test="status!=null and status!=''">
+          and status=#{status}
+        </if>
+      </where> 
+    </select> 
+    
+    <delete id="deleteEntities" parameterType="Integer[]">
+       delete from category where id in
+       <foreach collection="Array" item="id" open="(" separator="," close=")" >
+         #{id}
+       </foreach>
+    </delete>
+    
+    
+ </mapper>
+ 

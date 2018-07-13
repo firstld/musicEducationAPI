@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <!--
+      教师模块的mapper
+    -->
+    <mapper namespace="com.jingcheng.musicEducation.teacher.dao.TeacherDao">
+   
+    <insert id="insertEntity" parameterType="com.jingcheng.musicEducation.teacher.entity.Teacher">
+      insert into teacher  (teacherSn,
+                            name,
+                            avatar,
+                            level,
+                            description,
+                            status,
+                            createdAt,
+                            updatedAt
+                           )
+                    values(#{teacherSn},
+                           #{name},
+                           #{avatar},
+                           #{level},
+                           #{description},
+                           #{status},         
+                           NOW(),
+                           NOW()                                
+                           )
+    
+    </insert>
+    
+     <update id="updateEntity" parameterType="com.jingcheng.musicEducation.teacher.entity.Teacher">
+      update teacher
+        set  teacherSn     =#{teacherSn},
+             name          =#{name},
+             avatar        =#{avatar},
+             level         =#{level},
+             description   =#{description},
+             status        =#{status},
+             deletedAt     =#{deletedAt},
+             updatedAt     =NOW()
+      where  id            =#{id}         
+    </update>
+    
+    <select id="findObjById" resultType="com.jingcheng.musicEducation.teacher.entity.Teacher">
+       select * from teacher where id=#{id}    
+    </select>
+ 
+    <select id="findObjList" parameterType="map" resultType="com.jingcheng.musicEducation.teacher.entity.Teacher">
+      select *
+      from teacher
+      <where>
+        <if test="teacherSn!=null and teacherSn!=''">
+          teacherSn =#{teacherSn}
+        </if>
+        <if test="name!=null and name!=''">
+         and name like concat("%",#{name},"%")
+        </if>
+        <if test="level!=null and level!=''">
+         and level like concat("%",#{level},"%")
+        </if>
+        <if test="status!=null and status!=''">
+          and status=#{status}
+        </if>   
+      </where> 
+    </select>
+    
+    
+    </mapper>

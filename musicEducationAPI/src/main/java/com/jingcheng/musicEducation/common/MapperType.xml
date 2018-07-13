@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <!--
+      动漫模块的mapper
+    -->
+    <mapper namespace="com.jingcheng.musicEducation.*.dao.*">
+   
+    <insert id="insertEntity" parameterType="com.jingcheng.musicEducation.*.entity.*">
+      insert into         (
+                            createdAt,
+                            updatedAt
+                          )
+                    values(#{},
+                           #{},
+                           #{},
+                           #{},
+                           #{},         
+                           #{},
+                           #{},
+                           #{},
+                         
+                          NOW(),
+                          NOW()                                 
+                         )
+    
+    </insert>
+    
+     <update id="updateEntity" parameterType="com.jingcheng.musicEducation.*.entity.*">
+      update 
+        set  =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =#{},
+             =NOW()
+      where  id=#{id}
+              
+             
+          
+    </update>
+    
+    <select id="findObjById" resultType="com.jingcheng.musicEducation.*.entity.*">
+       select * from **  where id=#{id}    
+    </select>
+ 
+    <select id="findObjList" parameterType="map" resultType="com.jingcheng.musicEducation.*.entity.*">
+      select *
+      from **
+      <where>
+        <if test="categoryId!=null and categoryId!=''">
+          categoryId=#{categoryId}
+        </if>
+        <if test="name!=null and name!=''">
+          and name like concat("%",#{name},"%")
+        </if>
+        <if test="author!=null and author!=''">
+          and author like concat("%",#{author},"%")
+        </if>
+        <if test="status!=null and status!=''">
+          and status=#{status}
+        </if>
+        <if test="isUpdate!=null and isUpdate!=''">
+          and isUpdate=#{isUpdate}
+        </if>
+        <if test="isRecomment!=null and isRecommend!=''">
+          and isRecommend=#{isRecommend}
+        </if>
+        <if test="isNew!=null and isNew!=''">
+          and isNew=#{isNew}
+        </if>
+        <if test="isFree!=null and isFree!=''">
+          and isFree=#{isFree}
+        </if>
+      </where> 
+    </select>
+    
+    <!-- 后台定时更新需求的查询 -->
+     <select id="autoFindComicsList" resultType="com.jingcheng.comicsReader.comics.entity.Comics">
+        select * from reader_comics where status=1 order by chapterUpdatedAt limit 1000
+     </select>
+    
+    </mapper>
