@@ -5,6 +5,7 @@
     <settings>
 		  <!-- mybatis控制台LOG输出 -->
         <setting name="logImpl" value="LOG4J2" />
+        <setting name="callSettersOnNulls" value="true"/>
     </settings>
     <typeAliases>
       <package name="com.jingcheng.musicEducation.*.entity"/>

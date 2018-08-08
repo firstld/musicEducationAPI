@@ -51,7 +51,7 @@ public class UserResource {
    @JWTAuth
    @GET
    @Path("/search")
-   @PathParam(MediaType.APPLICATION_JSON+"; charset="+"UTF-8")
+   @Produces(MediaType.APPLICATION_JSON+"; charset="+"UTF-8")
    public JsonResult getUsers(){
 	  Map<String,String[]> reqMap=req.getParameterMap();
 	  Map<String,Object> params=MyUtil.stringArrayToObject(reqMap);
@@ -73,7 +73,8 @@ public class UserResource {
    public JsonResult groupCountRegister(@QueryParam("beginTime") String beginTime,
 		                                @QueryParam("endTime") String endTime,
 		                                @QueryParam("type") String type){
-       Map<String,Integer> result=userService.groupCountRegister(beginTime, endTime, type);
+	   System.out.println(beginTime);
+       Map<String,Long> result=userService.groupCountRegister(beginTime, endTime, type);
 	   return new JsonResult(result);
 	   
    }

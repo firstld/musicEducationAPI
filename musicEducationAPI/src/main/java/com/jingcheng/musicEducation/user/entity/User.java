@@ -21,15 +21,9 @@ public class User implements Serializable {
 	private String  birthday;
 	private String  telephone;
 	//钱包余额
-	private Double  purseBalnce;
+	private Double  purseBalance;
 	private String  lastLoginTime;
 	private Integer status;
-	public Integer getStatus() {
-		return status;
-	}
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
 	private String  createdAt;
 	private String  updatedAt;
 	public Integer getId() {
@@ -80,11 +74,17 @@ public class User implements Serializable {
 	public void setTelephone(String telephone) {
 		this.telephone = telephone;
 	}
-	public Double getPurseBalnce() {
-		return purseBalnce;
+	public Double getPurseBalance() {
+		return purseBalance;
 	}
-	public void setPurseBalnce(Double purseBalnce) {
-		this.purseBalnce = purseBalnce;
+	public void setPurseBalnce(Double purseBalance) {
+		this.purseBalance = purseBalance;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	public String getLastLoginTime() {
 		return lastLoginTime;
@@ -108,7 +108,7 @@ public class User implements Serializable {
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", password=" + password + ", openId=" + openId + ", gender="
 				+ gender + ", nickName=" + nickName + ", birthday=" + birthday + ", telephone=" + telephone
-				+ ", purseBalnce=" + purseBalnce + ", lastLoginTime=" + lastLoginTime + ", status=" + status
+				+ ", purseBalance=" + purseBalance + ", lastLoginTime=" + lastLoginTime + ", status=" + status
 				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + "]";
 	}
 	

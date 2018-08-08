@@ -18,8 +18,10 @@ import javax.ws.rs.core.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.jingcheng.musicEducation.order.service.OrderBackgroundService;
 import com.jingcheng.musicEducation.user.service.UserBackgroundService;
 import com.jingcheng.musicEducation.util.MyUtil;
+import com.jingcheng.musicEducation.util.auth.JWTAuth;
 
 /**
  * 
@@ -33,16 +35,21 @@ public class ExplorExcelResource {
 	@Autowired
 	private UserBackgroundService userService;
 	
+	@Autowired
+	private OrderBackgroundService  orderService;
+	
 	@Context
 	private HttpServletRequest req;
 	
 	@Context
 	private HttpServletResponse res;
 	/**
+	 * 
+	 * 用户表输出
 	 * @throws Exception 
 	 * 
 	 */
-	//@JWTAuth
+	@JWTAuth
 	@GET
 	@Path("/explorUser")
 	@Produces(MediaType.TEXT_PLAIN+ ";charset=" + "UTF-8")
@@ -50,10 +57,31 @@ public class ExplorExcelResource {
 	public  Response explorExcel() throws Exception{
 		Map<String,String[]> map=req.getParameterMap();
 		Map<String,Object> params=MyUtil.stringArrayToObject(map);
+		String fileName=params.get("fileName").toString();
 		List<Object> objData=userService.getUsers(params);
-		System.out.println(objData);
-		String fileName="d://20180629.xls";
-	    JxlUtil.explorExcel(objData, fileName);
+	    JxlUtil.userExplorExcel(objData, fileName);
+	    File file=new File(fileName);
+	    Response.ResponseBuilder res=Response.ok(file);
+	    res.header("Content-Disposition", "attachment;filename='" + URLEncoder.encode(file.getName(), "utf-8") + "'");
+		return res.build();
+	}
+	/**
+	 * 订单excel表
+	 * @return
+	 * @throws Exception
+	 */
+	@JWTAuth
+	@GET
+	@Path("/explorOrder")
+	@Produces(MediaType.TEXT_PLAIN+ ";charset=" + "UTF-8")
+	@Consumes(MediaType.APPLICATION_JSON+ ";charset=" + "UTF-8")
+	public Response explorOrder() throws Exception{
+		Map<String,String[]> map=req.getParameterMap();
+		Map<String,Object> params=MyUtil.stringArrayToObject(map);
+		String fileName=params.get("fileName").toString();
+		List<Object> objData=orderService.getOrderExportList(params);
+		String type=params.get("type").toString();
+	    JxlUtil.orderExplorExcel(objData, fileName,type);
 	    File file=new File(fileName);
 	    Response.ResponseBuilder res=Response.ok(file);
 	    res.header("Content-Disposition", "attachment;filename='" + URLEncoder.encode(file.getName(), "utf-8") + "'");

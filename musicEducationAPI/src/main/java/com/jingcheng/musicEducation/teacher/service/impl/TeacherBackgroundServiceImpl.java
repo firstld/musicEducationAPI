@@ -91,13 +91,13 @@ public class TeacherBackgroundServiceImpl implements TeacherBackgroundService {
 		Integer pageSize=Integer.valueOf((String)params.get("pageSize"));
 		String  orderBy=(String)params.get("orderBy");
 		String  sort=(String)params.get("sort");
-		if(pageCurrent!=null&&pageSize!=null&&orderBy!=null&&sort!=null){
+		if(pageCurrent!=null&&pageSize!=null&&orderBy!=null){
 			String order=orderBy+' '+sort;
 			PageHelper.startPage(pageCurrent, pageSize, order);
 			List<Object> teacherList=teacherDao.findObjList(params);
 			pojo=PageUtil.setPage(teacherList);
 		}else{
-			throw new ServiceException("分页参数不足");
+			throw new ServiceException("分页参数不能为空");
 		}
 		
 		return pojo;

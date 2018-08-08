@@ -47,12 +47,12 @@
             <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
         </if>
      </where>
-     group by DATE_FORMAT(created,'%Y-%m-%d')
+     group by DATE_FORMAT(createdAt,'%Y-%m-%d')
      </select>
    
     <!-- 统计月注册量 -->
     <select id="countMonthRegisterUser" parameterType="String" resultType="Map">
-    select DATE_FORM(createdAt,'%Y-%m') ,count(*) 
+    select DATE_FORMAT(createdAt,'%Y-%m') createdAt,count(*) count
     from user
      <where>
         <if test="beginTime!=null and beginTime!=''">
@@ -62,7 +62,7 @@
             <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
         </if>
      </where>
-    group by DATE_FROM(createdAt,'%Y-%m')
+    group by DATE_FORMAT(createdAt,'%Y-%m')
     </select> 
     
     

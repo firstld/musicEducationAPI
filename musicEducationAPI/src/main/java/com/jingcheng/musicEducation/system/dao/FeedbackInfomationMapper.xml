@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <!--
+      反馈信息的mapper
+    -->
+    <mapper namespace="com.jingcheng.musicEducation.system.dao.FeedbackInfomationDao"> 
+    <select id="findObjById" resultType="com.jingcheng.musicEducation.system.entity.FeedbackInfomation">
+       select * from feedback_infomation  where id=#{id}    
+    </select>
+ 
+    <select id="findObjList" parameterType="map" resultType="com.jingcheng.musicEducation.system.entity.FeedbackInfomation">
+      select *  from feedback_infomation
+      <where>
+        <if test="userName!=null">
+          userId in (select id from user where name=#{userName})
+        </if>
+        <if test="beginTime!=null">
+            <![CDATA[   and DATE_FORMAT(createdAt, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')]]>
+        </if>
+        <if test="endTime!=null">
+            <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
+        </if>
+      </where> 
+    </select>
+    
+    </mapper>

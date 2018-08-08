@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+ <!--
+      轮播图的mapper
+    -->
+    <mapper namespace="com.jingcheng.musicEducation.system.dao.BroadcastImageDao">
+   
+    <insert id="insertEntity" parameterType="com.jingcheng.musicEducation.system.entity.BroadcastImage">
+      insert into  broadcast_image (
+                                    imageUrl,
+                                    description,
+                                    status,
+                                    position,
+                                    createdAt
+		                           )
+		                    values(
+		                           #{imageUrl},
+		                           #{description},
+		                           #{status},
+		                           #{position},         
+		                           #{createdAt}                                 
+		                          )
+    
+    </insert>
+    
+     <update id="updateEntity" parameterType="com.jingcheng.musicEducation.system.entity.BroadcastImage">
+	  update broadcast_image
+				        set imageUrl    =#{imageUrl},
+				            description =#{description},
+				            status      =#{status},
+				            position    =#{position},
+				            deletedAt   =#{deletedAt}
+				    where   id          =#{id}
+                     
+    </update>
+    
+    <select id="findObjById" resultType="com.jingcheng.musicEducation.system.entity.BroadcastImage">
+       select * from broadcast_image  where id=#{id}    
+    </select>
+ 
+    <select id="findObjList" parameterType="map" resultType="com.jingcheng.musicEducation.system.entity.BroadcastImage">
+      select *  from broadcast_image
+      <where>
+        <if test="status!=null">
+          status=#{status}
+        </if>
+        <if test="position!=null">
+         and position=#{position}
+        </if>
+        <if test="beginTime!=null">
+            <![CDATA[   and DATE_FORMAT(createdAt, '%Y-%m-%d')>=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d')]]>
+        </if>
+        <if test="endTime!=null">
+            <![CDATA[  and DATE_FORMAT(createdAt, '%Y-%m-%d') <= DATE_FORMAT(#{endTime}, '%Y-%m-%d')]]>
+        </if>
+      </where> 
+    </select>
+    
+    </mapper>

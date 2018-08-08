@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -24,7 +23,6 @@ import com.jingcheng.musicEducation.util.page.PageUtil;
 
 @Service
 @Transactional
-@Scope("prototype")
 public class UserBackgroundServiceImpl implements UserBackgroundService {
     @Autowired
     private UserDao userDao;
@@ -47,31 +45,32 @@ public class UserBackgroundServiceImpl implements UserBackgroundService {
 	 */
 	@Override
 	public PagePojo getUserList(Map<String, Object> map) {
-		PagePojo pagePojo=null;
+	    if(StringUtils.isEmpty(map)){
+			throw new ServiceException("参数不能为空");
+		}
 		Integer pageCurrent=Integer.valueOf(map.get("pageCurrent").toString());
 		Integer pageSize   =Integer.valueOf(map.get("pageSize").toString());
-		if(map.get("orderBy")!=null){
-			String  orderBy    =(String)map.get("orderBy")+" "+"desc";
-			PageHelper.startPage(pageCurrent,pageSize,orderBy);
-			List<Object> list=userDao.findObjList(map);
-			pagePojo=PageUtil.setPage(list);
-		}else{
-			PageHelper.startPage(pageCurrent, pageSize);
-			List<Object> list=userDao.findObjList(map);
-			pagePojo=PageUtil.setPage(list);
+		String  orderBy    =(String)map.get("orderBy");
+		String  sort       =(String)map.get("sort");
+		String  order      = orderBy+" "+sort;
+		if(pageCurrent==null||pageSize==null||orderBy==null){
+			throw new ServiceException("参数不能为null");
 		}
-	
+		PageHelper.startPage(pageCurrent,pageSize,order);
+		List<Object> list=userDao.findObjList(map);
+		PagePojo pagePojo=PageUtil.setPage(list);
 		return pagePojo;
+		
 	}
     
 	/**
 	 * 分组统计用户的注册量
 	 */
 	@Override
-	public Map<String, Integer>groupCountRegister(String beginTime, String endTime, String type) {
+	public Map<String, Long>groupCountRegister(String beginTime, String endTime, String type) {
 		List<Map<String,Object>> results=new ArrayList<>();
 		//申明一个返回的map结果集
-		Map<String,Integer> map=new TreeMap<>(new Comparator<String>() {
+		Map<String,Long> map=new TreeMap<>(new Comparator<String>() {
             //根据map的key值重写排序
 			@Override
 			public int compare(String key1, String key2) {		
@@ -90,7 +89,7 @@ public class UserBackgroundServiceImpl implements UserBackgroundService {
 					//遍历结果集，获得每一个map结果，并将map中的key对应的value重写写入一个map中
 					for(Map<String,Object> resultMap:results){
 						String key=(String)resultMap.get("createdAt");
-						Integer value=(Integer)resultMap.get("count");
+						Long value=(Long)resultMap.get("count");
 						map.put(key, value);
 					}
 					//遍历日期列表，如果不存在map中就写入map，值为0
@@ -101,11 +100,12 @@ public class UserBackgroundServiceImpl implements UserBackgroundService {
 					for(String str:everDaysList){
 						if(map.get(str)==null){
 							String  key=str;
-							Integer value=0;
+							Long value=0l;
 							map.put(key, value);
 						}	
 					}		
 				}
+				return map;
 			}
 			if(type.equalsIgnoreCase("month")){
 				results=userDao.countMonthRegisterUser(beginTime, endTime);
@@ -114,19 +114,20 @@ public class UserBackgroundServiceImpl implements UserBackgroundService {
 				if(!StringUtils.isEmpty(results)){
 					for(Map<String,Object> resultMap:results){
 						String key=(String)resultMap.get("createdAt");
-						Integer value=(Integer)resultMap.get("count");
+						Long value=(Long)resultMap.get("count");
 						map.put(key, value);
 					}
 					for(String str:everMonthList){
 						if(map.get(str)==null){
 							String key=str;
-							Integer value=0;
+							Long value=0l;
 							map.put(key, value);
 						}
 					}
 				}
+				return map;
 			}
-		return map;
+		return null;
 	}
     /**
      * 获取用户列表  用户输出到excel中

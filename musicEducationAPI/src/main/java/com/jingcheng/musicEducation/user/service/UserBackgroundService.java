@@ -14,7 +14,7 @@ public interface UserBackgroundService {
 	
 	//统计注册量
 	//type:为统计注册量的类型   1:每天的统计（day） 2：每月的统计（month）
-	Map<String,Integer>groupCountRegister(String beginTime,String endTime,String type);
+	Map<String,Long>groupCountRegister(String beginTime,String endTime,String type);
 
 	List<Object> getUsers(Map<String,Object> map);
 }

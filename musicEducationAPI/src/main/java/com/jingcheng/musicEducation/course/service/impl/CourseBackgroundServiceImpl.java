@@ -189,6 +189,9 @@ public class CourseBackgroundServiceImpl implements CourseBackgroundService {
 		//只有当orderBy存在的时候才存在sort
 		String  sort = params.get("sort").toString();
 		String order=orderBy+" "+sort;
+		if(pageCurrent==null||pageSize==null||orderBy==null){
+			throw new ServiceException("分页参数不能为空");
+		}
 		PageHelper.startPage(pageCurrent, pageSize, order);
 		List<Object> courseList=courseDao.findObjList(params);
 		PagePojo pojo=PageUtil.setPage(courseList);

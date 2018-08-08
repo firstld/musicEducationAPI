@@ -11,11 +11,15 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 @Priority(Priorities.AUTHENTICATION)//优先级
 @Provider
 @JWTAuth//自定义的注解
 public class JWTSecurityFilter implements ContainerRequestFilter {
-
+   
+    
+	
 	@Override
 	public void filter(ContainerRequestContext req) throws IOException {
 			String token = req.getHeaderString("x-musciEducationAPI-token");
@@ -27,15 +31,17 @@ public class JWTSecurityFilter implements ContainerRequestFilter {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				long ttlMillis = 30L * 24L * 3600L * 1000L;
+				//long ttlMillis = 30L * 24L * 3600L * 1000L;
 				//判断是否过期
-				if(now-exp.getTime()>ttlMillis){
+				if(now-exp.getTime()>0){
 					req.abortWith(Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity("Authentication failed").build());
 				}else{
 					try {
 						Integer id=Integer.valueOf(JWTUtil.parseJWT(token).getSubject());
 						if(id==null){
 							req.abortWith(Response.status(Response.Status.UNAUTHORIZED).type(MediaType.APPLICATION_JSON).entity("Authentication failed").build());
+						}else{
+							//此处写管理员身份验证
 						}
 					} catch (Exception e) {
 						e.printStackTrace();

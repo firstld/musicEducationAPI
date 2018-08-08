@@ -36,7 +36,7 @@ public class TeacherResource {
 	@Context
 	private HttpServletResponse res;
 	
-	//@JWTAuth
+	@JWTAuth
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON+"; charset="+"UTF-8")
 	@Produces(MediaType.APPLICATION_JSON+"; charset="+"UTF-8")

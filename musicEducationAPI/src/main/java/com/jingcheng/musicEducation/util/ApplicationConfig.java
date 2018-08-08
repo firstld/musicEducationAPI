@@ -8,6 +8,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import com.jingcheng.musicEducation.category.resource.CategoryResource;
 import com.jingcheng.musicEducation.comment.resource.CommentResource;
 import com.jingcheng.musicEducation.course.resource.CourseResource;
+import com.jingcheng.musicEducation.order.resource.OrderResource;
 import com.jingcheng.musicEducation.teacher.resource.TeacherResource;
 import com.jingcheng.musicEducation.user.resource.UserResource;
 import com.jingcheng.musicEducation.util.auth.JWTSecurityFilter;
@@ -31,6 +32,10 @@ public class ApplicationConfig extends ResourceConfig {
 		register(CategoryResource.class);
 		//加载comment模块
 		register(CommentResource.class);
+		//加载order模块
+		register(OrderResource.class);
+		
+		
 		
 		//加载上传模块
 		register(UploadResource.class);
